@@ -47,10 +47,18 @@ class UAS(object):
         "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 6P Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.83 Mobile Safari/537.36",
         "Mozilla/5.0 (Linux; Android 6.0.1; E6653 Build/32.2.A.0.253) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.98 Mobile Safari/537.36",
         "Mozilla/5.0 (Linux; Android 6.0; HTC One M9 Build/MRA58K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.98 Mobile Safari/537.36",
+        "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1",
     ]
 
 
 class UA(object):
+    TYPE_BOT = "spider"
+    TYPE_SPIDER = "spider"
+    TYPE_PC = "browser"
+    TYPE_BROWSER = "browser"
+    TYPE_MOBILE = "mobile"
+    TYPE_PHONE = "mobile"
+
     @staticmethod
     def get(type_=""):
         type_ = getattr(UAS, type_, None)
@@ -65,7 +73,7 @@ class HTTPHeaders(object):
         if not ua:
             get_ua = UA.get()
         else:
-            get_ua = UA.get()
+            get_ua = ua
         return OrderedDict({
             "Connection": "keep-alive",
             "Accept-Encoding": "gzip, deflate",
@@ -79,7 +87,7 @@ class HTTPHeaders(object):
             "Connection": "keep-alive",
             "Accept-Encoding": "gzip, deflate",
             "Accept-Language": "zh-CN,zh;q=0.8",
-            "User-Agent": UA.get("spider"),
+            "User-Agent": UA.get(UA.TYPE_SPIDER),
         })
 
 
