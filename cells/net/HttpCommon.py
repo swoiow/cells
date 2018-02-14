@@ -78,6 +78,8 @@ class HTTPHeaders(object):
             "Connection": "keep-alive",
             "Accept-Encoding": "gzip, deflate",
             "Accept-Language": "zh-CN,zh;q=0.8",
+            "Cache-Control": "no-cache",
+            "DNT": "1",
             "User-Agent": get_ua,
         })
 
@@ -89,6 +91,17 @@ class HTTPHeaders(object):
             "Accept-Language": "zh-CN,zh;q=0.8",
             "User-Agent": UA.get(UA.TYPE_SPIDER),
         })
+
+    @staticmethod
+    def virtual_ip():
+        randint = random.randint
+        modify_list = [
+            "Via", "CLIENT_IP", "X-Real-Ip", "REMOTE_ADDR", "REMOTE_HOST", "X-Forwarded-For", "X_FORWARDED_FOR"
+        ]
+        random_ip = lambda: "%s.%s.%s.%s" % (randint(1, 255), randint(0, 255), randint(0, 255), randint(1, 255))
+        ip = random_ip()
+        headers = {k: ip for k in modify_list}
+        return headers
 
 
 if __name__ == "__main__":
