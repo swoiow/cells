@@ -10,7 +10,7 @@ from email.utils import parseaddr, formataddr
 mail_user = os.environ.get("MAIL_USER")
 mail_pass = os.environ.get("MAIL_PASS")
 mail_server = os.environ.get("MAIL_SERVER")
-mail_port = os.environ.get("MAIL_PORT")
+mail_port = os.environ.get("MAIL_PORT", 465)
 
 assert all([mail_user, mail_pass, mail_server, mail_port])
 
@@ -27,8 +27,8 @@ def send(to_addr, title, mail_body):
         msg["To"] = _format_addr("<%s>" % to_addr)
         msg["Subject"] = Header(title, "utf-8").encode()
 
-        server = smtplib.SMTP(mail_server, mail_port)
-        server.starttls()
+        server = smtplib.SMTP_SSL(mail_server, mail_port)
+        # server.starttls()
         # server.set_debuglevel(1)
 
         server.login(mail_user, mail_pass)
