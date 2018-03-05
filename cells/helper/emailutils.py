@@ -4,6 +4,8 @@
 import os
 import smtplib
 from email.header import Header
+from email.mime.application import MIMEApplication
+from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import parseaddr, formataddr
 
@@ -20,12 +22,26 @@ def _format_addr(s):
     return formataddr((Header(name, 'utf-8').encode(), addr))
 
 
-def send(to_addr, title, mail_body):
+def handle_attachment(abs_file):
+    part = MIMEApplication(open(abs_file, 'rb').read())
+    part.add_header('Content-Disposition', 'attachment', filename=os.path.basename(abs_file))
+    return part
+
+
+def send(to_addr, title, mail_body, attachments: list = None):
     try:
-        msg = MIMEText(mail_body, "plain", "utf-8")
+        msg = MIMEMultipart()
+
         msg["From"] = _format_addr("<%s>" % mail_user)
         msg["To"] = _format_addr("<%s>" % to_addr)
         msg["Subject"] = Header(title, "utf-8").encode()
+
+        body = MIMEText(mail_body)
+        msg.attach(body)
+
+        if attachments:
+            for abs_file_path in attachments:
+                msg.attach(handle_attachment(abs_file_path))
 
         server = smtplib.SMTP_SSL(mail_server, mail_port)
         # server.starttls()
