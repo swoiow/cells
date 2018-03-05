@@ -36,7 +36,7 @@ def send(to_addr, title, mail_body, attachments: list = None):
         msg["To"] = _format_addr("<%s>" % to_addr)
         msg["Subject"] = Header(title, "utf-8").encode()
 
-        body = MIMEText(mail_body)
+        body = MIMEText(mail_body, "plain", "utf-8")
         msg.attach(body)
 
         if attachments:

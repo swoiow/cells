@@ -69,6 +69,10 @@ class UA(object):
 
 class HTTPHeaders(object):
     @staticmethod
+    def ua_only(type_=None):
+        return UA.get(type_=type_)
+
+    @staticmethod
     def get(ua=None):
         if not ua:
             get_ua = UA.get()
