@@ -1,23 +1,23 @@
 from distutils.core import setup
 
+from setuptools import find_packages
+
 setup(
-    name='cells',
-    version='0.0.1',
-    packages=[
-        'cells',
-        'cells.db',
-        'cells.net',
-        'cells.web',
-        'cells.web.flask',
-        'cells.tools',
-        'cells.helper',
-        'cells.helper.jinja',
-        'cells.scrapy',
-        'cells.wrapper'
-    ],
-    url='',
-    license='MIT',
-    author='',
-    author_email='',
-    description=''
+    name="cells",
+    version="0.0.1",
+    url="",
+    license="MIT",
+    author="",
+    author_email="",
+    description="",
+
+    package_dir={},
+    packages=find_packages(exclude=["pyext", "*tests.*"]),
+    # include_package_data=True,
+    platforms="any",
+    # ext_package="cells",
+    # use_2to3=True,
+    install_requires=[
+        "six",
+    ]
 )
