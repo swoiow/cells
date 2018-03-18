@@ -9,10 +9,7 @@ from scrapy.dupefilters import BaseDupeFilter
 from scrapy.utils.project import data_path
 from scrapy.utils.request import request_fingerprint
 
-try:
-    from pybloom import ScalableBloomFilter
-except ImportError:
-    from cells.scrapy.pybloom import ScalableBloomFilter
+from .pybloom import ScalableBloomFilter
 
 
 class BLOOMDupeFilter(BaseDupeFilter):
