@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 DOWNLOADER_MIDDLEWARES = {
-    'cells.scrapy.middlewares.PuppeteerMiddleWare': 725,
+    'cells.scrapy.middlewares.PuppeteerMiddleWare': 589/725,
 }
 """
 
