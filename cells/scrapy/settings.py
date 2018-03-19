@@ -45,13 +45,13 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = 3.0
 # HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"
 
 #
-JOBDIR = ".scrapy_jobdir"
+# JOBDIR = ".scrapy_jobdir"
 
 LOG_LEVEL = "INFO"
 # LOG_FILE = "{}.log".format(BOT_NAME)
 LOG_ENCODING = "gbk"
 MEMUSAGE_LIMIT_MB = 128
-DUPEFILTER_CLASS = "cells.scrapy.extensions.BLOOMDupeFilter"
+# DUPEFILTER_CLASS = "cells.scrapy.extensions.BLOOMDupeFilter"
 
 #
 DEPTH_PRIORITY = 3

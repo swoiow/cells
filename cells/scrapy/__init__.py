@@ -7,14 +7,13 @@ https://doc.scrapy.org/en/latest/topics/api.html#module-scrapy.settings
 """
 
 
-def running_spiders(spiders=[], settings={}):
-    import scrapy
+def running_spiders(spiders=[], settings={}, **kwargs):
     from scrapy.settings import Settings
     from scrapy.crawler import CrawlerProcess
     from cells.scrapy import settings as _settings
 
     spider_settings = Settings()
-    spider_settings.setmodule(_settings, priority="project")
+    spider_settings.setmodule(_settings, priority="command")
 
     for item in ["JOBDIR", "DUPEFILTER_CLASS"]:
         spider_settings.pop(item)
@@ -23,14 +22,14 @@ def running_spiders(spiders=[], settings={}):
         spider_settings[item].update(settings.pop(item, {}), priority="cmdline")
 
     if settings:
-        spider_settings.update(settings, priority="cmdline")
+        spider_settings.update(settings, priority="project")
 
     process = CrawlerProcess(spider_settings.copy_to_dict())
 
-    if scrapy.Spider in spiders.__mro__:
+    if not isinstance(spiders, list):
         spiders = [spiders]
 
     for item_spider in spiders:
-        process.crawl(item_spider)
+        process.crawl(item_spider, **kwargs)
 
     process.start()

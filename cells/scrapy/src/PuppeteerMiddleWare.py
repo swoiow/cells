@@ -6,14 +6,15 @@ DOWNLOADER_MIDDLEWARES = {
 }
 """
 
-from cells.net import add_url_params
 from scrapy import signals
 from six.moves.urllib_parse import urlencode
+
+from cells.net import add_url_params
 
 
 class PuppeteerMiddleWare(object):
 
-    def __init__(self, api_url="http://localhost:9081/parse_html1"):
+    def __init__(self, api_url="http://localhost:9081/parse_html"):
         self._puppeteer_api = api_url
 
         self.remote_keys_key = '_puppeteer_remote_keys'
@@ -53,3 +54,6 @@ class PuppeteerMiddleWare(object):
             new_url = add_url_params(self._puppeteer_api, params)
             new_request = request.replace(url=new_url, priority=request.priority + 100)
             return new_request
+
+    def process_response(self, request, response, spider):
+        return response

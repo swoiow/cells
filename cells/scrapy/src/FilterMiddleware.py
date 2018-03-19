@@ -5,17 +5,18 @@ from __future__ import absolute_import
 
 import os
 
-from scrapy.dupefilters import BaseDupeFilter
+from scrapy.dupefilters import RFPDupeFilter
 from scrapy.utils.project import data_path
 from scrapy.utils.request import request_fingerprint
 
 from .pybloom import ScalableBloomFilter
 
 
-class BLOOMDupeFilter(BaseDupeFilter):
+class BLOOMDupeFilter(RFPDupeFilter):
     """Request Fingerprint duplicates filter"""
 
     def __init__(self, path=None, initial_capacity=None, error_rate=None, mode=None):
+        super(BLOOMDupeFilter, self).__init__()
         self.file = None
         self.fingerprints = None
 
@@ -45,8 +46,8 @@ class BLOOMDupeFilter(BaseDupeFilter):
             return True
         self.fingerprints.add(fp)
 
-    @staticmethod
-    def request_fingerprint(request):
+    # @staticmethod
+    def request_fingerprint(self, request):
         return request_fingerprint(request)
 
     def close(self, reason):
