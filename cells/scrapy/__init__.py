@@ -15,11 +15,8 @@ def running_spiders(spiders=[], settings={}, **kwargs):
     spider_settings = Settings()
     spider_settings.setmodule(_settings, priority="command")
 
-    for item in ["JOBDIR", "DUPEFILTER_CLASS"]:
-        spider_settings.pop(item)
-
     for item in ["SPIDER_MIDDLEWARES", "DOWNLOADER_MIDDLEWARES", "EXTENSIONS", "ITEM_PIPELINES"]:
-        spider_settings[item].update(settings.pop(item, {}), priority="cmdline")
+        spider_settings[item].update(settings.pop(item, {}), priority="project")
 
     if settings:
         spider_settings.update(settings, priority="project")
