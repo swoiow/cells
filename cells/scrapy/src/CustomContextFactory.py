@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
+Drop:
+     https://doc.scrapy.org/en/1.1/topics/settings.html?highlight=context#downloader-client-tls-method
 Usage:
     DOWNLOADER_CLIENTCONTEXTFACTORY = 'spider.contexts.CustomContextFactory'
 """
