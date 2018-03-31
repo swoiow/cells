@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*
+"""
+DOWNLOADER_MIDDLEWARES = {
+    'cells.scrapy.middlewares.ProxyMiddleware': 749,
+}
+"""
 
 import logging
 
@@ -31,4 +36,9 @@ class ProxyMiddleware(object):
         """ refresh proxy in request.meta """
         proxy_data = self.get_proxy_ip()
         request.meta['proxy'] = "{protocol}://{addr}".format(**proxy_data)
-        return request
+        request.meta['retry_time'] = request.meta.get("retry_time", 0) + 1
+
+        if request.meta['retry_time'] < 10:
+            return request
+        else:
+            return None
