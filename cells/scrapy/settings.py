@@ -32,10 +32,10 @@ ITEM_PIPELINES = {
 }
 
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
-AUTOTHROTTLE_ENABLED = True
-AUTOTHROTTLE_START_DELAY = 1
-AUTOTHROTTLE_MAX_DELAY = 30
-AUTOTHROTTLE_TARGET_CONCURRENCY = 3.0
+# AUTOTHROTTLE_ENABLED = False
+# AUTOTHROTTLE_START_DELAY = 1
+# AUTOTHROTTLE_MAX_DELAY = 30
+# AUTOTHROTTLE_TARGET_CONCURRENCY = 3.0
 
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
 # HTTPCACHE_ENABLED = True
