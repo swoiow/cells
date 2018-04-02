@@ -37,6 +37,7 @@ class ProxyMiddleware(object):
         proxy_data = self.get_proxy_ip()
         request.meta['proxy'] = "{protocol}://{addr}".format(**proxy_data)
         request.meta['retry_stat'] = request.meta.get("retry_stat", 0) + 1
+        request.priority = request.priority - 1
 
         if request.meta['retry_stat'] < 10:
             return request
