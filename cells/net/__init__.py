@@ -6,6 +6,17 @@ from json import dumps
 from six.moves.urllib_parse import ParseResult, parse_qsl, unquote, urlencode, urlparse
 
 
+def get_local_ip():
+    import socket
+
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    ip = s.getsockname()[0]
+    s.close()
+
+    return ip
+
+
 def add_url_params(url, params):
     """ Add GET params to provided URL being aware of existing.
 
@@ -33,10 +44,7 @@ def add_url_params(url, params):
 
         # Bool and Dict values should be converted to json-friendly values
         # you may throw this part away if you don't like it :)
-        parsed_get_args.update({
-            k: dumps(v)
-            for k, v in parsed_get_args.items() if isinstance(v, (bool, dict))
-        })
+        parsed_get_args.update({k: dumps(v) for k, v in parsed_get_args.items() if isinstance(v, (bool, dict))})
 
         # Converting URL argument to proper query string
         encoded_get_args = urlencode(parsed_get_args, doseq=True)
@@ -49,8 +57,8 @@ def add_url_params(url, params):
 
     # Creating new parsed result object based on provided with new
     # URL arguments. Same thing happens inside of urlparse.
-    new_url = ParseResult(parsed_url.scheme, parsed_url.netloc,
-                          parsed_url.path, parsed_url.params, encoded_get_args,
-                          parsed_url.fragment).geturl()
+    new_url = ParseResult(
+        parsed_url.scheme, parsed_url.netloc, parsed_url.path, parsed_url.params, encoded_get_args, parsed_url.fragment
+    ).geturl()
 
     return new_url
