@@ -23,6 +23,10 @@ def format_url(uri):
 
 
 def fix_relative_url(uri, path="/"):
+    if path[:2] == "//":
+        uri = "http:" + path
+        return uri
+
     if 'http://' != path[:7] and 'https://' != path[:8]:
         new_uri = urlparse.urljoin(uri, path)
 
