@@ -28,7 +28,7 @@ def handle_attachment(abs_file):
     return part
 
 
-def send(to_addr, title, mail_body, attachments):
+def send(to_addr, title, mail_body, attachments: list = None):
     try:
         msg = MIMEMultipart()
 
