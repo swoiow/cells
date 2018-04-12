@@ -22,12 +22,34 @@ def format_url(uri):
         return uri.scheme + "://" + uri.netloc + uri.path
 
 
-def fix_relative_url(uri, path="/"):
-    if path[:2] == "//":
-        uri = "http:" + path
-        return uri
+def fix_scheme(uri: str, default_scheme="http"):
+    """
+        print(fix_scheme('http://localhost.com'))
+        print(fix_scheme('//localhost.com'))
+        print(fix_scheme('www.localhost.com'))
+        print(fix_scheme('/localhost.com'))
+    """
+    uri_obj = urlparse.urlparse(uri)
+    if not uri_obj.scheme:
+        _uri = "//" + uri
+        if _uri[:4] == "////" or _uri[:3] != "///":
+            uri_obj = urlparse.urlparse(_uri, scheme=default_scheme)
+            return uri_obj.geturl()
 
-    if 'http://' != path[:7] and 'https://' != path[:8]:
+    return uri
+
+
+def fix_relative_url(uri, path="/"):
+    """
+        print(fix_relative_url('http://localhost.com', 'http://localhost.com/aa'))
+        print(fix_relative_url('http://localhost.com', '//localhost.com/bb'))
+        print(fix_relative_url('http://localhost.com', 'www.localhost.com'))
+        print(fix_relative_url('http://localhost.com', '/localhost.com'))
+    """
+    if path[:2] == "//":
+        return fix_scheme(path)
+
+    elif path[0] == "/":
         new_uri = urlparse.urljoin(uri, path)
 
         new_uri_arr = urlparse.urlparse(new_uri)
@@ -39,10 +61,7 @@ def fix_relative_url(uri, path="/"):
 
         return new_uri
 
-    elif 'http://' != path[:7] or 'https://' != path[:8]:
-        return uri
-
-    return None
+    return path
 
 
 def file_or_not(uri, use="white_list", **kwargs):
