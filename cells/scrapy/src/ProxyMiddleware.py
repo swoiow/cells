@@ -15,8 +15,9 @@ logger = logging.getLogger(__name__)
 
 class ProxyMiddleware(object):
 
-    def __init__(self, proxy_api="http://localhost:5000/get"):
+    def __init__(self, proxy_api="http://localhost:5000/get", max_proxy_retry=10):
         self.proxy_api = proxy_api
+        self._max_proxy_retry = max_proxy_retry
 
     def get_proxy_ip(self):
         resp = requests.get(self.proxy_api)
@@ -24,7 +25,10 @@ class ProxyMiddleware(object):
 
     @classmethod
     def from_crawler(cls, crawler):
-        o = cls(crawler.settings['PROXY_API'])
+        o = cls(
+            proxy_api=crawler.settings['PROXY_API'],
+            max_proxy_retry=crawler.settings.get("MAX_PROXY_RETRY", 10)
+        )
         return o
 
     def process_request(self, request, spider):
@@ -39,7 +43,7 @@ class ProxyMiddleware(object):
         request.meta['retry_stat'] = request.meta.get("retry_stat", 0) + 1
         request.priority = request.priority - 1
 
-        if request.meta['retry_stat'] < 10:
+        if request.meta['retry_stat'] < self._max_proxy_retry:
             return request
         else:
             logger.error('Max retry in [{}] '.format(request.url, **proxy_data))
