@@ -44,6 +44,9 @@ ITEM_PIPELINES = {
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"
 
+# See https://doc.scrapy.org/en/latest/topics/settings.html#dnscache-enabled
+DNS_TIMEOUT = 3
+
 #
 # JOBDIR = ".scrapy_jobdir"
 

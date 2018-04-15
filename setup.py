@@ -4,7 +4,7 @@ from setuptools import find_packages
 
 setup(
     name="cells",
-    version="0.0.1",
+    version="0.0.3",
     url="",
     license="MIT",
     author="",

@@ -38,13 +38,11 @@ class ProxyMiddleware(object):
 
     def process_exception(self, request, exception, spider):
         """ refresh proxy in request.meta """
-        proxy_data = self.get_proxy_ip()
-        request.meta['proxy'] = "{protocol}://{addr}".format(**proxy_data)
         request.meta['retry_stat'] = request.meta.get("retry_stat", 0) + 1
         request.priority = request.priority - 1
 
         if request.meta['retry_stat'] < self._max_proxy_retry:
             return request
         else:
-            logger.error('Max retry in [{}] '.format(request.url, **proxy_data))
+            logger.error('Max retry in [{}] '.format(request.url))
             return None
