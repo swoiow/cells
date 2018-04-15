@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import logging
 import posixpath
 import re
 
@@ -14,7 +15,7 @@ BLACK_LIST = [
 
 
 def format_url(uri):
-    """fix no scheme url """
+    """ [deprecated] fix no scheme url """
     uri = re.sub(r'''[\\"']''', "", uri)
     uri = urlparse.urlparse(uri, scheme="http")
     if uri.scheme in ["http", "https"]:
@@ -46,10 +47,13 @@ def fix_relative_url(uri, path="/"):
         print(fix_relative_url('http://localhost.com', 'www.localhost.com'))
         print(fix_relative_url('http://localhost.com', '/localhost.com'))
     """
-    if path[:2] == "//":
+    if path.startswith("http") or path.startswith("https"):
+        return path
+
+    elif path.startswith("//"):
         return fix_scheme(path)
 
-    elif path[0] == "/":
+    elif path.startswith("/"):
         new_uri = urlparse.urljoin(uri, path)
 
         new_uri_arr = urlparse.urlparse(new_uri)
@@ -61,7 +65,9 @@ def fix_relative_url(uri, path="/"):
 
         return new_uri
 
-    return path
+    else:
+        logging.warning("fix_relative_url: fix failed with [{}]&[{}]".format(uri, path))
+        return None
 
 
 def file_or_not(uri, use="white_list", **kwargs):
