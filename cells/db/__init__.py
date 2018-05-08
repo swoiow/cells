@@ -47,5 +47,5 @@ set NLS_LANG=SIMPLIFIED CHINESE_CHINA.UTF8
 """
 import os
 
-if not os.environ.get("DATABASE_URI") and os.environ.get("LIB_DOC", 1):
+if not os.environ.get("DATABASE_URI") and int(os.environ.get("LIB_DOC", 1)):
     print(__doc__)
