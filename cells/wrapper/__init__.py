@@ -13,6 +13,6 @@ def show_run_time(f):
 
         f(*args, **kwargs)
 
-        print("LAST TIME：\n", time.time() - c)
+        print("[{}] DURATION：{}".format(f.__name__, time.time() - c))
 
     return swap
