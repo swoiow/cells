@@ -3,24 +3,24 @@
 
 import functools
 import time
+import traceback
 
 
 def show_run_time(func):
     @functools.wraps(func)
     def swap(*args, **kwargs):
+        fn = func.__name__
         c = time.time()
-        print("START TIME：{} ({})".format(time.ctime(), c))
+        print("[{}] START TIME：{} ({})".format(fn, time.ctime(), c))
 
         func(*args, **kwargs)
 
-        print("LAST TIME：\n", time.time() - c)
+        print("[{}] DURATION：{}".format(fn, time.time() - c))
 
     return swap
 
 
 def catch_err_msg(func):
-    import traceback
-
     @functools.wraps(func)
     def wrapper(*args, **kw):
         try:
