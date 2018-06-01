@@ -13,11 +13,12 @@ import traceback
 from contextlib import contextmanager
 from datetime import datetime
 
+import sqlalchemy as sa
 from six.moves import cPickle
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm.session import Session
 
-__all_ = ["engine", "Session", "Base", "MyBase"]
+__all_ = ["db_write", "db_read", "dynamic_table", "MyORMBase"]
 
 
 @contextmanager
@@ -61,11 +62,10 @@ def db_read(engine=None):
         session.close()
 
 
-Base = declarative_base()
-
-
 class MyORMBase(object):
     # query = Session.query_property()
+
+    _id = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
 
     def row2dict(self, r):
         return {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
@@ -80,3 +80,46 @@ class MyORMBase(object):
 
     def __repr__(self):
         return '<%s @%#x>' % (self.__class__.__name__, id(self))
+
+
+OrmBase = declarative_base(cls=MyORMBase)
+
+
+def dynamic_table(repo, model, table_name=None):
+    """
+        http://windrocblog.sinaapp.com/?p=1554
+        http://docs.sqlalchemy.org/en/latest/orm/extensions/declarative/mixins.html
+
+    record_table_mapper = {}
+    class PotentialModel(object):
+        __tablename__ = "ddd"
+        name = sa.Column(sa.String(1000))
+
+    a = dynamic_table("PotentialModel", PotentialModel, "PotentialModel")
+    record_table_mapper["dyt_A"] = a
+
+    engine = sa.create_engine("sqlite:///database.db")
+    session = Session(bind=engine)
+
+    OrmBase.metadata.create_all(engine)
+
+    with db_write(engine) as db:
+        b = a(name="abc123")
+        db.add(b)
+        c = a(name="qqq321")
+        db.add(c)
+
+    with db_read(engine) as db:
+        q = db.query(a)
+        print(q.all())
+    """
+
+    dict_ = table_name and {'__tablename__': table_name} or dict()
+
+    table_object = type(
+        'DYT_{class_name}'.format(class_name=repo),
+        (model, OrmBase),
+        dict_
+    )
+
+    return table_object
