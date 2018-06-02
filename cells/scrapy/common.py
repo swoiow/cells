@@ -7,11 +7,16 @@ import re
 
 import six.moves.urllib.parse as urlparse
 
+_doc_file_list = ["txt", "doc", "docx", "ppt", "pptx", "xls", "xlsx", "pdf", ]
+_zip_file_list = ["zip", "rar", "7z", "tar", "tar.bz", "tar.gz", "xz"]
+_img_file_list = ["tif", "jpg", "png", "gif", "jpeg", "swf", ]
+_web_file_list = ["img", "ico", "css", "js", "xml", "svg", "json", "scss"]
+
 WHITE_LIST = ["html", "xhtml", "shtml", "htm", "php", "jsp", "cgi"]
-BLACK_LIST = [
-    "doc", "docx", "ppt", "pptx", "xls", "xlsx", "pdf", "tif", "zip", "rar", "jpg", "png", "gif", "jpeg", ".swf",
-    ".txt", ".img", ".ico", ".css", ".js", ".xml", ".svg", ".json", ".scss"
-]
+BLACK_LIST = _doc_file_list + _zip_file_list + _img_file_list + _web_file_list
+
+_rule = "^.*\.(?:{})+.*$"
+DEFAULT_RULE = re.compile(_rule.format("|".join(_web_file_list + _img_file_list)), re.IGNORECASE | re.DOTALL)
 
 
 def format_url(uri):
@@ -66,7 +71,7 @@ def fix_relative_url(uri, path="/"):
         return new_uri
 
     else:
-        logging.warning("fix_relative_url: fix failed with [{}]&[{}]".format(uri, path))
+        logging.debug("fix_relative_url: fix failed with [{}]&[{}]".format(uri, path))
         return None
 
 
