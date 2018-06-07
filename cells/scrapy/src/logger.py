@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*
 
 import logging
+import sys
 from logging.handlers import RotatingFileHandler
 from os.path import join
 
@@ -34,7 +35,8 @@ def init_logging(bot_name, path=None, level=logging.INFO, encoding="gbk", format
 
     formatter = logging.Formatter(format_string)
 
-    ch = logging.StreamHandler()
+    ch = logging.StreamHandler(sys.stdout)
+    ch.name = "ext_ch"
     ch.setFormatter(formatter)
 
     fh = RotatingFileHandler(
@@ -44,8 +46,13 @@ def init_logging(bot_name, path=None, level=logging.INFO, encoding="gbk", format
         encoding=encoding,
         delay=_FILE_DELAY,
     )
+
+    fh.name = "ext_fh"
     fh.level = level
     fh.setFormatter(formatter)
 
-    logging.getLogger("scrapy").addHandler(fh)
-    # logging.getLogger().addHandler(ch)
+    if fh.name not in [h.name for h in logging.getLogger("scrapy").handlers]:
+        logging.getLogger("scrapy").addHandler(fh)
+
+    # if ch.name not in [h.name for h in logging.getLogger().handlers]:
+    #     logging.getLogger().addHandler(ch)
