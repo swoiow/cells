@@ -9,7 +9,7 @@ from os.path import join
 _FORMATTER = "%(asctime)s [%(name)s] [%(filename)s#L%(lineno)d] [PID@%(process)d] %(levelname)s %(message)s"
 _MAX_BYTES = 30 * 1024 * 1024  # 30M
 _BACKUP_COUNT = 10
-_FILE_DELAY = 3
+_FILE_DELAY = True
 
 
 def init_logging(bot_name, path=None, level=logging.INFO, encoding="gbk", format_string=_FORMATTER, **kwargs):
