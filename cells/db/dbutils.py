@@ -65,7 +65,7 @@ def db_read(engine=None):
 class MyORMBase(object):
     # query = Session.query_property()
 
-    _id = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
+    # _id = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
 
     def row2dict(self, r):
         return {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
