@@ -85,7 +85,7 @@ class MyORMBase(object):
 OrmBase = declarative_base(cls=MyORMBase)
 
 
-def dynamic_table(repo, model, table_name=None):
+def dynamic_table(cls_name, model, table_name=None):
     """
         http://windrocblog.sinaapp.com/?p=1554
         http://docs.sqlalchemy.org/en/latest/orm/extensions/declarative/mixins.html
@@ -117,7 +117,7 @@ def dynamic_table(repo, model, table_name=None):
     dict_ = table_name and {'__tablename__': table_name} or dict()
 
     table_object = type(
-        'DYT_{class_name}'.format(class_name=repo),
+        'DYT_{class_name}'.format(class_name=cls_name),
         (model, OrmBase),
         dict_
     )
