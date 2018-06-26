@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <template>
+
+        <el-button raw-type="button" @click="addCol">
+            添加一列
+        </el-button>
+
+        <el-popover
+                placement="right"
+                width="400"
+                trigger="click">
+
+            <el-checkbox
+                    v-for="col in cols"
+                    v-model="col.display"
+                    :label="col.label"
+            ></el-checkbox>
+
+            <el-button slot="reference"> 选择显示列</el-button>
+        </el-popover>
+
+        <el-button raw-type="button" @click="prevPage">
+            上一页
+        </el-button>
+
+        <el-button raw-type="button" @click="nextPage">
+            下一页
+        </el-button>
+
+        <el-table :data="tableData"
+                  @header-click="handleHeaderClick"
+                  style="width: 100%">
+            <el-table-column
+                    v-for="col in cols"
+                    v-if="col.display"
+                    :prop="col.prop"
+                    :label="col.label">
+            </el-table-column>
+        </el-table>
+
+    </template>
+</div>
+
+<div id="js" hidden>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+    <script>
+        let api = "http://dev.com/chart"
+    </script>
+    <script>
+        let Main = {
+            data() {
+                return {
+                    tableData: [
+                        // {
+                        //     date: "2016-05-02",
+                        //     name: "王小虎",
+                        //     address: "上海市普陀区金沙江路 1518 弄"
+                        // }, {
+                        //     date: "2016-05-04",
+                        //     name: "王小虎",
+                        //     address: "上海市普陀区金沙江路 1517 弄"
+                        // }
+                    ],
+                    cols: [
+                        // {prop: "date", label: "日期", display: true},
+                        // {prop: "name", label: "姓名", display: true},
+                    ]
+                }
+            },
+            created: function () {
+                let vm = this;
+
+                axios.get(api).then(
+                    function (response) {
+                        let cols = [];
+                        vm.$data.tableData = response.data.data;
+
+                        if (vm.$data.tableData) {
+                            Object.keys(vm.$data.tableData[0]).forEach(function (c) {
+                                let o = {prop: c, label: c, display: true};
+                                cols.push(o);
+                            })
+                        }
+
+                        vm.$data.cols = cols;
+                    }
+                );
+            },
+            methods: {
+                addCol() {
+                    let vm = this;
+
+                    if (typeof vm.$data.count === "undefined") {
+                        vm.$data.count = 0
+                    } else {
+                        vm.$data.count = vm.$data.count + 1
+                    }
+                    vm.cols.push({prop: "example", label: "例子" + vm.$data.count, display: true})
+                },
+                handleHeaderClick(column, event) {
+                    let vm = this;
+
+                    vm.$data.cols.forEach(function (d) {
+                        if (d.prop === column.property) {
+                            d.display = 0;
+                            return false;
+                        }
+                    })
+                },
+                prevPage() {
+
+                },
+                nextPage() {
+
+                }
+            }
+        }
+    </script>
+    <script>
+        let vueInst = Vue.extend(Main)
+        new vueInst().$mount("#app")
+    </script>
+</div>
+</body>
+</html>
