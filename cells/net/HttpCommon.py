@@ -25,10 +25,10 @@ class _UA(object):
         return random.choice(type_)
 
 
-class HTTPHeaders(object):
+class _HTTPHeaders(object):
     @property
     def default(self):
-        return self.get()
+        return _HTTPHeaders.get()
 
     @staticmethod
     def ua_only(type_=""):
@@ -70,4 +70,4 @@ class HTTPHeaders(object):
         return headers
 
 
-HTTPHeaders = HTTPHeaders()
+HTTPHeaders = _HTTPHeaders()
