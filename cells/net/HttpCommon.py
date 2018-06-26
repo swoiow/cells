@@ -26,6 +26,9 @@ class _UA(object):
 
 
 class HTTPHeaders(object):
+    @property
+    def default(self):
+        return self.get()
 
     @staticmethod
     def ua_only(type_=""):
@@ -67,5 +70,4 @@ class HTTPHeaders(object):
         return headers
 
 
-if __name__ == "__main__":
-    print(HTTPHeaders.get_bot())
+HTTPHeaders = HTTPHeaders()
