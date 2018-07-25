@@ -68,7 +68,8 @@ class _Handles(object):
         backupCount = backup_count = kwargs.get("backupCount", kwargs.get("backup_count", _BACKUP_COUNT))
         fileDelay = file_delay = kwargs.get("fileDelay", kwargs.get("file_delay", _FILE_DELAY))
 
-        nm = kwargs.get("name") and kwargs["name"] or self.inst.name
+        nm = kwargs.get("name", kwargs.get("filename"))
+        nm = nm and nm or self.inst.name
         ph = kwargs.get("path", curdir)
         name = "{}".format(nm)
         filename = path = join(ph, name)
