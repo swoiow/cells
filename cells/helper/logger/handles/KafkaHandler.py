@@ -16,7 +16,7 @@ def encode_datetime(obj):
 
 class KafkaHandle(logging.NullHandler):
     def __init__(
-            self, kafka_brokers, kafka_topic,
+            self, kafka_brokers, topic_map,
             acks="all", retries=5, level=logging.NOTSET,
     ):
         super(KafkaHandle, self).__init__()
@@ -27,7 +27,9 @@ class KafkaHandle(logging.NullHandler):
             retries=retries,
             value_serializer=lambda m: msgpack.dumps(m, default=encode_datetime, use_bin_type=True),
         )
-        self._kafka_topic = kafka_topic
+
+        self.topic_map = topic_map
+        self.topic_map["warning"] = self.topic_map["warn"]  # [NOTICE] logging 里面弃用了warn
 
     @property
     def kafka_server(self):
@@ -38,7 +40,8 @@ class KafkaHandle(logging.NullHandler):
         self.emit(record)
 
     def emit(self, record):
-        self.kafka_server.send(self._kafka_topic, record.msg)
+        kafka_topic = self.topic_map[record.levelname.lower()]
+        self.kafka_server.send(kafka_topic, record.msg)
 
     def __del__(self):
-        self._kafka_producer.flush()
+        self.kafka_server.flush(30)
