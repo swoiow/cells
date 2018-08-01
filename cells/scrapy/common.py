@@ -50,32 +50,37 @@ def fix_relative_url(uri, path):
         print(fix_relative_url('http://localhost.com', 'http://localhost.com/aa'))
         print(fix_relative_url('http://localhost.com', '//localhost.com/bb'))
         print(fix_relative_url('http://localhost.com', 'www.localhost.com'))
-
-        print(fix_relative_url('http://localhost.com', '/pathA/pathB'))
-        print(fix_relative_url('http://localhost.com', './pathA/pathB'))
-
+        print("-" * 3)
+        print(fix_relative_url('http://localhost.com', '/phA/phB'))
+        print(fix_relative_url('http://localhost.com', './phA/phB'))
+        print("-" * 3)
+        print(fix_relative_url('http://localhost.com/phA', '../phA/a.jpg'))  # nothings to do, because this is wrong url
+        print(fix_relative_url('http://localhost.com/phA/phB/', '../phC/phD'))
+        print("-" * 3)
         print(fix_relative_url('http://domainA.com', 'http://www.domainB.com'))
-        print(fix_relative_url('http://domainA.com', 'www.domainB.com/pathA'))
+        print(fix_relative_url('http://domainA.com', 'www.domainB.com/phA'))
     """
-
-    if path.startswith("//"):
+    if (not path.startswith("/")) and (not path.startswith(".")):
+        logging.debug("Nothings to do: fix failed with [{}]&[{}]".format(uri, path))
         return fix_scheme(path)
 
-    elif path.startswith("/") or path.startswith("."):
-        new_uri = urlparse.urljoin(uri, path)
-
-        new_uri_arr = urlparse.urlparse(new_uri)
-        new_path = posixpath.normpath(new_uri_arr[2])
-        new_uri = urlparse.urlunparse((
-            new_uri_arr.scheme, new_uri_arr.netloc, new_path, new_uri_arr.params, new_uri_arr.query,
-            new_uri_arr.fragment
-        ))
-
-        return new_uri
-
-    else:
-        logging.debug("Nothing to do: fix failed with [{}]&[{}]".format(uri, path))
+    elif path.startswith("//"):
         return fix_scheme(path)
+
+    new_uri = urlparse.urljoin(uri, path)
+
+    new_uri_arr = urlparse.urlparse(new_uri)
+    new_path = posixpath.normpath(new_uri_arr[2])
+    new_uri = urlparse.urlunparse((
+        new_uri_arr.scheme,
+        new_uri_arr.netloc,
+        new_path,
+        new_uri_arr.params,
+        new_uri_arr.query,
+        new_uri_arr.fragment
+    ))
+
+    return new_uri
 
 
 def file_or_not(uri, use="white_list", **kwargs):
