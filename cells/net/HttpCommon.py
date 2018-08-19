@@ -25,7 +25,44 @@ class _UA(object):
         return random.choice(type_)
 
 
-class _HTTPHeaders(object):
+class _AdditionHeader(object):
+    @staticmethod
+    def add_form_header(header: dict, **kwargs):
+        hd = {"Content-Type": "application/x-www-form-urlencoded"}
+        header.update(**hd)
+        header.update(**kwargs)
+        return header
+
+    @staticmethod
+    def add_textxml_header(header: dict, **kwargs):
+        hd = {"Content-Type": "text/xml; charset=utf-8"}
+        header.update(**hd)
+        header.update(**kwargs)
+        return header
+
+    @staticmethod
+    def add_textplain_header(header: dict, **kwargs):
+        hd = {"Content-Type": "text/plain;charset=UTF-8"}
+        header.update(**hd)
+        header.update(**kwargs)
+        return header
+
+    @staticmethod
+    def add_ajax_header(header: dict, **kwargs):
+        hd = {"X-Requested-With": "XMLHttpRequest"}
+        header.update(**hd)
+        header.update(**kwargs)
+        return header
+
+    @staticmethod
+    def add_json_header(header: dict, **kwargs):
+        hd = {"Content-Type": "application/json; charset=UTF-8"}
+        header.update(**hd)
+        header.update(**kwargs)
+        return header
+
+
+class _HTTPHeaders(_AdditionHeader):
     @property
     def default(self):
         return _HTTPHeaders.get()
