@@ -13,7 +13,6 @@ import traceback
 from contextlib import contextmanager
 from datetime import datetime
 
-import sqlalchemy as sa
 from six.moves import cPickle
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm.session import Session
@@ -37,12 +36,13 @@ def db_write(engine=None):
 
     except Exception as e:
         session.rollback()
-        traceback.print_exc()
-        f_locals = sys.exc_info()[2].tb_next.tb_frame.f_locals
+        _f = "session_{}".format(datetime.now().strftime("%Y%m%d%H%M%S_%f"))
 
+        f_locals = sys.exc_info()[2].tb_next.tb_frame.f_locals
         _v = {k: v for k, v in f_locals.items() if isinstance(v, (str, bytes, dict, list, tuple))}
-        _f = "session_{}.dmp".format(datetime.now().strftime("%Y%m%d%H%M%S_%f"))
-        _p = os.path.join(os.getcwd(), _f)
+        _v["__tb"] = traceback.format_exc()
+
+        _p = os.path.join(os.getcwd(), _f + ".dmp")
         with open(_p, "wb") as wf:
             cPickle.dump(obj=_v, file=wf)
             print("Error and export dump in => {}".format(_p))
@@ -67,8 +67,12 @@ class MyORMBase(object):
 
     # _id = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
 
-    def row2dict(self, r):
-        return {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+    @staticmethod
+    def row2dict(r):
+        if hasattr(r, "__table__"):
+            return {c.name: getattr(r, c.name) for c in r.__table__.columns}
+        else:
+            return {c: getattr(r, c) for c in r._fields}
 
     def to_dict(self):
         return {c.name: getattr(self, c.name, None) for c in self.__table__.columns}
