@@ -31,12 +31,6 @@ def add_handle(func):
         params = {p: mix_params.get(p) for p in origin_keys}
 
         hd = _func(**params)
-        hd.name = "{cls}@{name}: lv{level}".format(
-            cls=hd.__class__.__name__,
-            name=_func.__name__,
-            level=params.get("level", logging.INFO)
-        )
-
         if "level" in prepare_params:
             hd.setLevel(prepare_params["level"])
 
@@ -45,6 +39,12 @@ def add_handle(func):
 
         if "hd_name" in prepare_params:
             hd.name = prepare_params["hd_name"]
+        else:
+            hd.name = "{cls}@{name}: lv{level}".format(
+            cls=hd.__class__.__name__,
+            name=_func.__name__,
+            level=params.get("level", logging.INFO)
+        )
 
         self.inst._call_add_handler(hd)
 
@@ -68,7 +68,7 @@ class _Handles(object):
         backupCount = backup_count = kwargs.get("backupCount", kwargs.get("backup_count", _BACKUP_COUNT))
         fileDelay = file_delay = kwargs.get("fileDelay", kwargs.get("file_delay", _FILE_DELAY))
 
-        nm = kwargs.get("name") and kwargs["name"] or self.inst.name
+        nm = kwargs.get("filename", kwargs.get("name", self.inst.name))
         ph = kwargs.get("path", curdir)
         name = "{}".format(nm)
         filename = path = join(ph, name)
