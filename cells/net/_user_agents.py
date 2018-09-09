@@ -1,7 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import functools
 
+
+def exec_doc(f):
+    @functools.wraps(f)
+    def swap(*args, **kwargs):
+        doc = (c.strip() for c in f.__doc__.split("\n") if c.strip())
+        for line in doc:
+            yield line
+
+    return swap
+
+
+@exec_doc
 def _spider():
     """
     Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)
@@ -18,10 +31,8 @@ def _spider():
     Mozilla/5.0 (Windows NT 6.2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36 QIHU 360SE; 360Spider
     """
 
-    for line in _spider.__doc__.split("\n")[1:-1]:
-        yield line.strip()
 
-
+@exec_doc
 def _browser():
     """
     Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0)
@@ -62,10 +73,8 @@ def _browser():
     Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 4.0; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; BRI/2; MAAR; .NET4.0C; .NET4.0E; InfoPath.3; QIHU 360EE)
     """
 
-    for line in _browser.__doc__.split("\n")[1:-1]:
-        yield line.strip()
 
-
+@exec_doc
 def _mobile():
     """
     Mozilla/5.0 (Linux; Android 6.0.1; SM-G920V Build/MMB29K) AppleWebKit/537.36 (KHTML like Gecko) Chrome/52.0.2743.98 Mobile Safari/537.36
@@ -77,5 +86,3 @@ def _mobile():
     Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML like Gecko) Version/9.0 Mobile/13B143 Safari/601.1
     Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; Tablet PC 2.0; InfoPath.3; .NET4.0C; .NET4.0E; QIHU 360EE)
     """
-    for line in _mobile.__doc__.split("\n")[1:-1]:
-        yield line.strip()
