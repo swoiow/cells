@@ -7,24 +7,6 @@ from collections import OrderedDict
 from ._user_agents import (_browser, _mobile, _spider)
 
 
-class _UA(object):
-    spider = list(_spider())
-    browser = list(_browser())
-    mobile = list(_mobile())
-
-    TYPE_BOT = "spider"
-    TYPE_SPIDER = "spider"
-    TYPE_PC = "browser"
-    TYPE_BROWSER = "browser"
-    TYPE_MOBILE = "mobile"
-    TYPE_PHONE = "mobile"
-
-    @staticmethod
-    def get(type_=""):
-        type_ = getattr(_UA, type_, _UA.browser)
-        return random.choice(type_)
-
-
 class _AdditionHeader(object):
     @staticmethod
     def add_form_header(header: dict, **kwargs):
@@ -42,7 +24,7 @@ class _AdditionHeader(object):
 
     @staticmethod
     def add_textplain_header(header: dict, **kwargs):
-        hd = {"Content-Type": "text/plain;charset=UTF-8"}
+        hd = {"Content-Type": "text/plain; charset=UTF-8"}
         header.update(**hd)
         header.update(**kwargs)
         return header
@@ -63,20 +45,36 @@ class _AdditionHeader(object):
 
 
 class _HTTPHeaders(_AdditionHeader):
+    TYPE_BOT = _spider
+    TYPE_SPIDER = _spider
+
+    TYPE_PC = _browser
+    TYPE_BROWSER = _browser
+
+    TYPE_MOBILE = _mobile
+    TYPE_PHONE = _mobile
+
     @property
     def default(self):
-        return _HTTPHeaders.get()
+        return self.get()
+
+    @property
+    def default_browser(self):
+        if not hasattr(self, "__default_browser_uas__"):
+            setattr(self, "__default_browser_uas__", self.ua_only())
+
+        return self.get(ua=getattr(self, "__default_browser_uas__"))
 
     @staticmethod
-    def ua_only(type_=""):
-        return _UA.get(type_=type_)
+    def ua_only(uas_type=TYPE_BROWSER):
+        return random.choice(list(uas_type()))
 
-    @staticmethod
-    def get(ua=None):
+    def get(self, ua=None):
         if not ua:
-            get_ua = _UA.get()
+            get_ua = self.ua_only()
         else:
             get_ua = ua
+
         return OrderedDict({
             "Connection": "keep-alive",
             "Accept-Encoding": "gzip, deflate",
@@ -86,24 +84,25 @@ class _HTTPHeaders(_AdditionHeader):
             "User-Agent": get_ua,
         })
 
-    @staticmethod
-    def get_bot():
+    def get_bot(self):
         return OrderedDict({
             "Connection": "keep-alive",
             "Accept-Encoding": "gzip, deflate",
             "Accept-Language": "zh-CN,zh;q=0.8",
-            "User-Agent": _UA.get(_UA.TYPE_SPIDER),
+            "User-Agent": self.ua_only(self.TYPE_SPIDER),
         })
 
     @staticmethod
     def virtual_ip():
         randint = random.randint
         modify_list = [
-            "Via", "CLIENT_IP", "X-Real-Ip", "REMOTE_ADDR", "REMOTE_HOST", "X-Forwarded-For", "X_FORWARDED_FOR"
+            "Via", "CLIENT_IP", "X-Real-Ip", "REMOTE_ADDR", "REMOTE_HOST", "X-Forwarded-For", "X_FORWARDED_FOR",
         ]
+
         random_ip = lambda: "%s.%s.%s.%s" % (randint(1, 255), randint(0, 255), randint(0, 255), randint(1, 255))
         ip = random_ip()
         headers = {k: ip for k in modify_list}
+
         return headers
 
 
