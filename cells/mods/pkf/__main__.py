@@ -19,7 +19,7 @@ def tar_object(pwd, filename=None, mode=None, enc_mode=None):
         print("Encrypt Finish !!")
 
     elif mode == "d":
-        c = "dd if={fn}.enc | openssl enc -e -{em} -d -k {pwd} | tar zxf -"
+        c = "dd if={fn} | openssl enc -e -{em} -d -k {pwd} | tar zxf -"
         c = c.format(fn=filename, pwd=pwd, em=enc_mode)
 
         os.system(c)
@@ -32,7 +32,7 @@ def tar_object(pwd, filename=None, mode=None, enc_mode=None):
 def mod(args=None):
     import argparse
 
-    parser = argparse.ArgumentParser(prog="cells.mods.pkf", description="Send mail quickly")
+    parser = argparse.ArgumentParser(prog="cells.mods.pkf", description="tar file with password .")
 
     parser.add_argument("-f", dest="filename", metavar="filename", required=False, default="*",
                         help="Encrypt file, default: * .")
