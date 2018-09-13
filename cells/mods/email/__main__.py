@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*
 
-from .emailutils import MailClient
+from ...helper.email import MailClient
 
 
 def mod(args=None):
     import argparse
 
-    parser = argparse.ArgumentParser(prog="cells.helper.email", description="Send mail quickly")
+    parser = argparse.ArgumentParser(prog="cells.mods.email", description="Send mail quickly")
 
     parser.add_argument("-t", dest="title", metavar="title", required=True,
                         help="title of the mail .")
