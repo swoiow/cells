@@ -19,7 +19,7 @@ def tar_object(pwd, filename=None, mode=None, enc_mode=None):
         print("Encrypt Finish !!")
 
     elif mode == "d":
-        c = "dd if={fn} | openssl enc -e -{em} -d -k {pwd} | tar zxf -"
+        c = "dd if={fn} | openssl enc -d -{em} -k {pwd} | tar zxf -"
         c = c.format(fn=filename, pwd=pwd, em=enc_mode)
 
         os.system(c)

@@ -6,7 +6,7 @@ setup(
     name="cells",
     version="0.0.3",
     url="",
-    license="MIT",
+    license="MPL-2.0",
     author="",
     author_email="",
     description="",
@@ -19,5 +19,6 @@ setup(
     # use_2to3=True,
     install_requires=[
         "six",
+        "colorama",
     ]
 )

@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from cells.helper.colorprint import ColorPrint as _
+from colorama import Fore, init
 
+
+init(autoreset=True)
 
 message = "this file has been remove."
-_.print_fail(message)
+print(Fore.RED + message)
