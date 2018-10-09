@@ -8,19 +8,20 @@ def tar_object(pwd, filename=None, mode=None, enc_mode=None):
     if not filename:
         filename = "*"
     if not enc_mode:
-        enc_mode = "aes192"
+        enc_mode = "aes192-wrap"
 
     if mode == "e":
-        fid = uuid.uuid4().hex
-        c = "tar -czf - {fn} | openssl enc -e -{em} -k {pwd} | dd of=_{fid}.enc"
-        c = c.format(fn=filename, pwd=pwd, fid=fid, em=enc_mode)
-        os.system(c)
+        c = "tar -czf - {fn} | openssl enc -{em} -pbkdf2 -e -k {pwd} | dd of=_{fid}.enc"
+        c = c.format(fn=filename, pwd=pwd, fid=uuid.uuid4().hex, em=enc_mode)
+        print(c)
 
+        os.system(c)
         print("Encrypt Finish !!")
 
     elif mode == "d":
-        c = "dd if={fn} | openssl enc -d -{em} -k {pwd} | tar zxf -"
+        c = "dd if={fn} | openssl enc -{em} -pbkdf2 -d -k {pwd} | tar zxf -"
         c = c.format(fn=filename, pwd=pwd, em=enc_mode)
+        print(c)
 
         os.system(c)
         print("Decrypt Finish !!")
