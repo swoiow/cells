@@ -7,7 +7,7 @@ import logging
 from logging.handlers import (HTTPHandler, RotatingFileHandler, TimedRotatingFileHandler)
 from os.path import curdir, join
 
-_FORMATTER = " %(levelname).1s %(asctime)s [%(name)s:%(filename)s] L%(lineno)d > %(message)s"
+_FORMATTER = "%(levelname).1s %(asctime)s %(name)s [%(filename)s:%(funcName)s L%(lineno)d] > %(message)s"
 _MAX_BYTES = 10 * 1024 * 1024  # 10M
 _BACKUP_COUNT = 10
 _FILE_DELAY = True
@@ -41,10 +41,10 @@ def add_handle(func):
             hd.name = prepare_params["hd_name"]
         else:
             hd.name = "{cls}@{name}: lv{level}".format(
-            cls=hd.__class__.__name__,
-            name=_func.__name__,
-            level=params.get("level", logging.INFO)
-        )
+                cls=hd.__class__.__name__,
+                name=_func.__name__,
+                level=params.get("level", logging.INFO)
+            )
 
         self.inst._call_add_handler(hd)
 
@@ -129,6 +129,10 @@ class InitLogger(logging.Logger):
         self.disabled = False
 
         self.enable = _Handles(self)
+
+        # registration to Manage
+        if self.name not in self.manager.loggerDict.keys():
+            self.manager.loggerDict[self.name] = self
 
     def _call_add_handler(self, hd):
         if hd.name not in [h.name for h in self.handlers]:
