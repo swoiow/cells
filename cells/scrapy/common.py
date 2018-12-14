@@ -86,39 +86,42 @@ def fix_relative_url(uri, path, debug=False):
     elif path.startswith("//"):
         return fix_scheme(path)
 
-    new_uri = urlparse.urljoin(uri, path)
+    new_url = urlparse.urljoin(uri, path)
 
-    new_uri_arr = urlparse.urlparse(new_uri)
-    new_path = posixpath.normpath(new_uri_arr[2])
-    new_uri = urlparse.urlunparse((
-        new_uri_arr.scheme,
-        new_uri_arr.netloc,
+    new_url_array = urlparse.urlparse(new_url)
+    new_path = posixpath.normpath(new_url_array[2])
+    new_url = urlparse.urlunparse((
+        new_url_array.scheme,
+        new_url_array.netloc,
         new_path,
-        new_uri_arr.params,
-        new_uri_arr.query,
-        new_uri_arr.fragment
+        new_url_array.params,
+        new_url_array.query,
+        new_url_array.fragment
     ))
 
-    return new_uri
+    return new_url
 
 
-def file_or_not(uri, use="white_list", **kwargs):
+def file_or_not(uri, rule="white_list", **kwargs):
+    """  判断 uri 是否满足 rule 条件, 满足则返回 True """
+
     uri_arr = urlparse.urlparse(uri)
     end_prefix = uri_arr.path.lower().rsplit(".", 1)
 
-    white_list = kwargs.get("white_list") and kwargs["white_list"] or WHITE_LIST
-    black_list = kwargs.get("black_list") and kwargs["black_list"] or BLACK_LIST
+    white_list = "white_list" in kwargs and kwargs["white_list"] or WHITE_LIST
+    black_list = "black_list" in kwargs and kwargs["black_list"] or BLACK_LIST
 
-    if use == "white_list":
-        if end_prefix[-1] in white_list:
-            return uri
+    if "use" in kwargs:
+        rule = kwargs["use"]
 
-    elif use == "black_list":
-        if not any(map(lambda x: uri.lower().find(x) > -1, black_list)):
-            return uri
+    if rule == "white_list":
+        return end_prefix[-1] in white_list
+
+    elif rule == "black_list":
+        return any(list(map(lambda x: uri.lower().find(x) > -1, black_list)))
 
     else:
-        return False
+        return None
 
 
 def dedupe(items, key=None):
