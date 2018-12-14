@@ -57,6 +57,6 @@ MEMUSAGE_LIMIT_MB = 512 * 6
 # DUPEFILTER_CLASS = "cells.scrapy.extensions.BLOOMDupeFilter"
 
 #
-DEPTH_LIMIT = 2
+# DEPTH_LIMIT = 2
 SCHEDULER_DISK_QUEUE = "scrapy.squeues.PickleFifoDiskQueue"
 SCHEDULER_MEMORY_QUEUE = "scrapy.squeues.FifoMemoryQueue"
