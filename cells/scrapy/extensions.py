@@ -3,5 +3,5 @@
 
 from __future__ import absolute_import
 
-from .src.FilterUrls import BLOOMDupeFilter
+from .src.FilterUrls import BLOOMDupeFilter, RedisReBloom
 from .src.LoggerExtension import LoggerExtension
