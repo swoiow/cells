@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import re
+import socket
 from json import dumps
 
 from six.moves.urllib_parse import ParseResult, parse_qsl, unquote, urlencode, urlparse
 
 
 def get_local_ip():
-    import socket
-
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
     ip = s.getsockname()[0]
@@ -67,3 +67,41 @@ def add_url_params(url, params):
     ).geturl()
 
     return new_url
+
+
+def get_encoding(response):
+    """ Figure out charset problem.
+    Example:
+        is_same_charset, new_charset, old_charset = get_encoding(resp)
+        if not is_same_charset:
+            resp.encoding = new_charset
+            html = resp.text.encode(new_charset)
+    """
+
+    # requests.utils.get_encoding_from_headers(res.headers)
+    response_encode = response.encoding.upper()
+    proposal_encode = response_encode
+
+    def _search_encoding_from_content():
+        charset = "ISO-8859-1"
+
+        rule_for_charset = re.compile(r'(?<=charset=)[\w"-]+')
+        rule_for_meta = re.compile(r'(?<=<meta)[\w\s=/"-;]+(?=>)')
+
+        for line in response.iter_lines(decode_unicode=True):
+            if rule_for_meta.search(line):
+                meta_lines = rule_for_meta.findall(line)
+                for meta_line in meta_lines:
+                    if re.search(rule_for_charset, meta_line):
+                        charset = rule_for_charset.findall(meta_line)[0].replace('"', "").upper()
+                        break
+
+        return charset.upper()
+
+    if response_encode not in ["GB2312", "UTF-8", "GBK"]:
+        proposal_encode = _search_encoding_from_content()
+
+    return response_encode == proposal_encode, proposal_encode, response_encode
+
+
+smart_charset = get_encoding
