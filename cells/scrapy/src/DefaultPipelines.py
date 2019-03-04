@@ -30,7 +30,7 @@ class Pipeline(object):
                 db.bulk_save_objects(self.INST_BUCKET)
 
                 spider.logger.info(
-                    "Heartbeat: %s => %s" % (time.ctime(), len(self.INST_BUCKET))
+                    "Heartbeat: %s => %s" % (time.strftime("%Y-%m-%dT%H:%M:%S"), len(self.INST_BUCKET))
                 )
 
             self.INST_BUCKET.clear()

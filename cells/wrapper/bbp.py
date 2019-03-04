@@ -49,10 +49,11 @@ class Consumer(threading.Thread):
         self._func_handle_task(self.queue)
 
     @staticmethod
-    def main(worker_func: callable, queue: Queue, task_number: int):
+    def main(worker_func: callable, queue: Queue, task_number: int, daemon=False):
         for num in range(task_number):
             consumer = Consumer("consumer", queue, func_handle_task=worker_func)
-            consumer.setDaemon(True)
+            if daemon:
+                consumer.setDaemon(True)
 
             consumer.start()
             print("Consumer-{} is running!".format(num))

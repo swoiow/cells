@@ -40,7 +40,7 @@ cfg = {
 
 HtmlClean = partial(
     bleach.clean,
-    tags=cfg["_bleach"]["tags"],
-    attributes=cfg["_bleach"]["attrs"],
-    protocols=cfg["_bleach"]["protocols"],
+    tags=cfg["tags"],
+    attributes=cfg["attrs"],
+    protocols=cfg["protocols"],
 )
