@@ -36,3 +36,12 @@ def TWorker(func):
         return rtn
 
     return wrapper
+
+
+def run_async(func):
+    @functools.wraps(func)
+    def function_in_a_thread(*args, **kwargs):
+        func_t = threading.Thread(target=func, args=args, kwargs=kwargs)
+        func_t.start()
+
+    return function_in_a_thread
