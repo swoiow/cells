@@ -4,7 +4,10 @@ https://stackoverflow.com/questions/1422368/fcntl-substitute-on-windows
 >> for i in dir(fcntl): print(i, getattr(fcntl, i))
 """
 
-print("hooking fcntl.py for development/testing purposes only in windows")
+import logging
+
+
+logging.warning("hooking fcntl.py for development/testing purposes only in windows")
 
 DN_ACCESS = 1
 DN_ATTRIB = 32
