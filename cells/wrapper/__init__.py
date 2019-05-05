@@ -13,9 +13,11 @@ def show_run_time(func):
         c = time.time()
         print("[{}] START TIME：{} ({})".format(fn, time.ctime(), c))
 
-        func(*args, **kwargs)
+        rst = func(*args, **kwargs)
 
         print("[{}] DURATION：{}".format(fn, time.time() - c))
+
+        return rst
 
     return swap
 

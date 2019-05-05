@@ -8,6 +8,7 @@ from ._user_agents import (_browser, _mobile, _spider)
 
 
 class _AdditionHeader(object):
+
     @staticmethod
     def add_form_header(header: dict, **kwargs):
         hd = {"Content-Type": "application/x-www-form-urlencoded"}
@@ -104,6 +105,10 @@ class _HTTPHeaders(_AdditionHeader):
         headers = {k: ip for k in modify_list}
 
         return headers
+
+    @staticmethod
+    def fmt_string_headers(strings):
+        return dict((l.strip().split(": ", 1) for l in strings.split("\n") if l.strip()))
 
 
 HTTPHeaders = _HTTPHeaders()
