@@ -3,4 +3,4 @@
 
 from __future__ import absolute_import
 
-from .src.CustomContextFactory import CustomContextFactory
+from .DefaultPipelines import Pipeline as DefaultPipeline

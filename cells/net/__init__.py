@@ -101,7 +101,8 @@ def get_encoding(response):
     if response_encode not in ["GB2312", "UTF-8", "GBK"]:
         proposal_encode = _search_encoding_from_content()
 
-    return response_encode == proposal_encode, proposal_encode, response_encode
+    is_proposal_encode = response_encode == proposal_encode
+    return is_proposal_encode, proposal_encode, response_encode
 
 
 smart_charset = get_encoding
