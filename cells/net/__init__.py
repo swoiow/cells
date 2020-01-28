@@ -110,8 +110,8 @@ smart_charset = get_encoding
 
 def smart_response(response):
     """ return response body in human readable """
-    proposal_encode, proposal_encode, response_encode = get_encoding(response)
+    is_proposal_encode, proposal_encode, response_encode = get_encoding(response)
 
-    if not proposal_encode:
+    if not is_proposal_encode:
         response.encoding = proposal_encode
     return response
