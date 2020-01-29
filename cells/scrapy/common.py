@@ -31,12 +31,7 @@ def format_url(uri):
 
 
 def fix_scheme(uri: str, default_scheme="http"):
-    """
-        print(fix_scheme('http://localhost.com'))
-        print(fix_scheme('//localhost.com'))
-        print(fix_scheme('www.localhost.com'))
-        print(fix_scheme('/localhost.com'))
-    """
+    """ fix url without scheme """
     uri_obj = urlparse.urlparse(uri)
     if not uri_obj.scheme:
         _uri = "//" + uri
@@ -72,7 +67,7 @@ def fix_relative_url(uri, path, debug=False):
 
     elif (not path.startswith("/")) and (not path.startswith(".")):
         if debug:
-            print("[W] => fix_relative_url: failed with `{}` & `{}`".format(uri, path))
+            print(f"[W] => fix_relative_url: failed with `{uri}` & `{path}`")
 
         len_uri, len_path = len(uri), len(path)
         weights = len_path > len_uri and 1 + len_path // len_uri or 0
@@ -131,3 +126,21 @@ def dedupe(items, key=None):
         if val and val not in seen:
             yield item
             seen.add(val)
+
+if __name__ == '__main__':
+    print(fix_relative_url('http://localhost.com', 'http://localhost.com/aa'))
+    print(fix_relative_url('http://localhost.com', '//localhost.com/bb'))
+    print(fix_relative_url('http://localhost.com', 'www.localhost.com'))
+    print(fix_relative_url("http://localhost.com", "sub1.sub2.localhost.cn/this-is-a-longer-post-title.html"))
+
+    print("-" * 3)
+    print(fix_relative_url('http://localhost.com', '/phA/phB'))
+    print(fix_relative_url('http://localhost.com', './phA/phB'))
+    print("-" * 3)
+    print(fix_relative_url('http://localhost.com/phA', '../phA/a.jpg'))
+    print(fix_relative_url('http://localhost.com/phA/phB/', '../phC/phD'))
+    print("-" * 3)
+    print(fix_relative_url('http://domainA.com', 'http://www.domainB.com'))
+    print(fix_relative_url('http://domainA.com', 'www.domainB.com/phA'))
+    print(fix_relative_url('http://domainA.com', 'phA'))
+    print(fix_relative_url('http://domainA.com', 'java'))

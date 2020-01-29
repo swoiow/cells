@@ -16,7 +16,7 @@ def running_spiders(spiders=[], settings={}, **kwargs):
     """
     from scrapy.settings import Settings
     from scrapy.crawler import CrawlerProcess
-    from cells.scrapy import settings as _settings
+    from cells.scrapy import default_scrapy_settings as _settings
 
     spider_settings = Settings()
     spider_settings.setmodule(_settings)

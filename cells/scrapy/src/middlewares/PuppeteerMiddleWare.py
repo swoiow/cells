@@ -17,6 +17,9 @@ from cells.net import add_url_params
 
 
 class PuppeteerMiddleWare(object):
+    """ settings:
+            PUPPETEER_API
+    """
 
     def __init__(self, api_url=None):
         self._puppeteer_api = api_url
@@ -25,7 +28,7 @@ class PuppeteerMiddleWare(object):
 
     @classmethod
     def from_crawler(cls, crawler):
-        o = cls(crawler.settings['PUPPETEER_PARSEHTML_API'])
+        o = cls(crawler.settings['PUPPETEER_API'])
         crawler.signals.connect(o.spider_opened, signal=signals.spider_opened)
         return o
 

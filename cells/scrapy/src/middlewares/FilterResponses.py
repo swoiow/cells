@@ -49,6 +49,6 @@ class FilterResponses(object):
             return response
 
         else:
-            msg = "Ignoring request {}, content-type[{}] was not in whitelist".format(response.url, content_type_header)
+            msg = f"Ignoring request {response.url}, content-type[{content_type_header}] was not in whitelist"
             spider.logger.info(msg)
             raise IgnoreRequest()
