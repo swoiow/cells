@@ -7,7 +7,6 @@ import re
 
 import six.moves.urllib.parse as urlparse
 
-
 _doc_file_list = ["txt", "doc", "docx", "ppt", "pptx", "xls", "xlsx", "pdf", ]
 _zip_file_list = ["zip", "rar", "7z", "tar", "tar.bz", "tar.gz", "xz"]
 _img_file_list = ["tif", "jpg", "png", "gif", "jpeg", "swf", ]
@@ -126,6 +125,7 @@ def dedupe(items, key=None):
         if val and val not in seen:
             yield item
             seen.add(val)
+
 
 if __name__ == '__main__':
     print(fix_relative_url('http://localhost.com', 'http://localhost.com/aa'))
