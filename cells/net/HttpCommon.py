@@ -78,7 +78,8 @@ class _HTTPHeaders(_AdditionHeader):
 
         return OrderedDict({
             "Connection": "keep-alive",
-            "Accept-Encoding": "gzip, deflate",
+            'Accept': '*/*',
+            'Accept-Encoding': ', '.join(('gzip', 'deflate')),
             "Accept-Language": "zh-CN,zh;q=0.8",
             "Cache-Control": "no-cache",
             "DNT": "1",
@@ -88,7 +89,8 @@ class _HTTPHeaders(_AdditionHeader):
     def get_bot(self):
         return OrderedDict({
             "Connection": "keep-alive",
-            "Accept-Encoding": "gzip, deflate",
+            'Accept': '*/*',
+            'Accept-Encoding': ', '.join(('gzip', 'deflate')),
             "Accept-Language": "zh-CN,zh;q=0.8",
             "User-Agent": self.ua_only(self.TYPE_SPIDER),
         })
