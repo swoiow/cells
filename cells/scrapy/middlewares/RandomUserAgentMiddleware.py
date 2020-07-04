@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 DOWNLOADER_MIDDLEWARES = {
-    'Spiders.myMIddleWare.RandomUserAgentMiddleware': 300,
+    'cells.scrapy.middlewares.RandomUserAgentMiddleware': 300,
 }
 """
 

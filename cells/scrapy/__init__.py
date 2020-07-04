@@ -5,14 +5,15 @@ https://doc.scrapy.org/en/latest/topics/practices.html
 https://doc.scrapy.org/en/latest/topics/api.html
 https://doc.scrapy.org/en/latest/topics/api.html#module-scrapy.settings
 """
+from typing import Dict, List
 
 
-def running_spiders(spiders=[], settings={}, **kwargs):
+def run_spiders(spiders: List = None, settings: Dict = None, **kwargs):
     """
-    :param spiders:
+    :param spiders: -
     :param settings: 传入settings，则合并配置；反之，覆盖配置。
-    :param kwargs:
-    :return:
+    :param kwargs: -
+    :return: -
     """
     from scrapy.settings import Settings
     from scrapy.crawler import CrawlerProcess
@@ -22,6 +23,7 @@ def running_spiders(spiders=[], settings={}, **kwargs):
     spider_settings.setmodule(_settings)
 
     for item in ["SPIDER_MIDDLEWARES", "DOWNLOADER_MIDDLEWARES", "EXTENSIONS", "ITEM_PIPELINES"]:
+        # see docs: https://docs.scrapy.org/en/latest/topics/settings.html
         spider_settings[item].update(settings.pop(item, {}))
 
         # if (item in spider_settings) and (item in settings):
