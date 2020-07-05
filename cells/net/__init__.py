@@ -115,3 +115,17 @@ def smart_response(response):
     if not is_proposal_encode:
         response.encoding = proposal_encode
     return response
+
+
+def format_chrome_request_headers(raw_header: str) -> dict:
+    headers = {}
+    raw_headers = raw_header.split("\n")
+    for header in raw_headers:
+        header = header.strip()
+        if not header or header.startswith(":") or header.lower().startswith("if-"):
+            continue
+
+        k, v = header.split(":", 1)
+        headers[k.strip()] = v.strip()
+
+    return headers
