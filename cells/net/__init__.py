@@ -129,3 +129,20 @@ def format_chrome_request_headers(raw_header: str) -> dict:
         headers[k.strip()] = v.strip()
 
     return headers
+
+
+def parse_cookies_from_chrome():
+    pass
+
+
+def parse_headers_from_curl(curl_string: list):
+    header_bucket =  {}
+    for l in curl_string:
+        l = l.strip().replace("\'", "").replace(" \\", "")
+
+        if l.startswith("-H"):
+            *_, header_item = l.split(" ", 1)
+            header_key, header_value = header_item.split(": ")
+            header_bucket.update({header_key: header_value})
+
+    return header_bucket
